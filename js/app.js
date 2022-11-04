@@ -8,9 +8,24 @@ const symptomsInput = document.querySelector("#sintomas")
 
 // User Interface
 // Form
-const form = document.querySelector("#nuevo-cita")
+const form = document.querySelector("#nueva-cita")
 // Appoinment
 const AppoinmentContainer = document.querySelector("#citas")
+
+// Classes
+class Appoinment {
+    constructor() {
+        this.Appoinments = []
+    }
+}
+
+class UI {
+
+}
+
+// We instantiate the classes globally for use in various functions
+const ui = new UI()
+const manageAppoinment = new Appoinment()
 
 // Event listener or event register
 eventListener()
@@ -23,6 +38,8 @@ function eventListener() {
     dateInput.addEventListener("input", appoinmentDatas)
     hourInput.addEventListener("input", appoinmentDatas)
     symptomsInput.addEventListener("input", appoinmentDatas)
+
+    form.addEventListener("submit", createNewAppoinment)
 }
 
 //Object with the appoinment information
@@ -41,6 +58,21 @@ function appoinmentDatas(e) {
     appoinmentObject[e.target.name] = e.target.value
 
     console.log("I am the name filled with the value", appoinmentObject)
+}
+
+// Check and add a new appoinment to the appoinment class
+function createNewAppoinment(e) {
+    e.preventDefault()
+
+    // To get information from the appoinment object
+    const { pet, owner, phone, date, hour, symptoms } = appoinmentObject
+
+    // Validate
+    if(pet === "", owner === "", phone === "", date === "", hour === "", symptoms === "") {
+        console.log("Every field are neccesaries")
+
+        return
+    }
 }
 
 
