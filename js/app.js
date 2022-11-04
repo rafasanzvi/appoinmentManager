@@ -15,12 +15,41 @@ const AppoinmentContainer = document.querySelector("#citas")
 // Classes
 class Appoinment {
     constructor() {
-        this.Appoinments = []
+        this.appoinments = []
+    }
+
+    addNewAppoinment(appoinment) {
+        this.appoinments = [...this.appoinments, appoinment]
+
+        console.log("I am the appoinments: ", this.appoinments)
     }
 }
 
 class UI {
+    printAlert(message, typeOfMessage) {
+        // Creating div
+        const divMessage = document.createElement("div")
+        divMessage.classList.add("text-center", "alert", "d-block", "col-12")
+        
 
+        // Add class depend the type of error
+        if(typeOfMessage === "error") {
+            divMessage.classList.add("alert-danger")
+        } else {
+            divMessage.classList.add("alert-success")
+        }
+
+        // Error message
+        divMessage.textContent = message
+
+        // Add to the DOM
+        document.querySelector("#contenido").insertBefore(divMessage, document.querySelector(".agregar-cita"))
+
+        // Delete error message
+        setTimeout(() => {
+            divMessage.remove()
+        }, 5000)
+    }
 }
 
 // We instantiate the classes globally for use in various functions
@@ -57,7 +86,7 @@ const appoinmentObject = {
 function appoinmentDatas(e) {
     appoinmentObject[e.target.name] = e.target.value
 
-    console.log("I am the name filled with the value", appoinmentObject)
+    // console.log("I am the name filled with the value", appoinmentObject)
 }
 
 // Check and add a new appoinment to the appoinment class
@@ -68,11 +97,36 @@ function createNewAppoinment(e) {
     const { pet, owner, phone, date, hour, symptoms } = appoinmentObject
 
     // Validate
-    if(pet === "", owner === "", phone === "", date === "", hour === "", symptoms === "") {
-        console.log("Every field are neccesaries")
+    if(pet === "" || owner === "" || phone === "" || date === "" || hour === "" || symptoms === "") {
+        ui.printAlert("Every fields are required", "error")
 
         return
     }
+
+    // Generating a new ID
+    appoinmentObject.id = Date.now()
+
+    // Creating a new appoinment
+    manageAppoinment.addNewAppoinment({...appoinmentObject}) // We can create a copy of the object to avoid to have duplicated objects when we make a new appoinment
+
+    // Restart the appoinmentObject
+    restartAppoinmentObject()
+
+    // Restart the form when the appoinment is finished
+    form.reset()
+
+    // Show appoinments in the HTML
+    
+}
+
+// We need to restart the appoinmentObject because although the HTML has been restarted the object in the code is keeping saving the different appoinments
+function restartAppoinmentObject() {
+    appoinmentObject.pet = ""
+    appoinmentObject.owner = ""
+    appoinmentObject.phone = ""
+    appoinmentObject.date = ""
+    appoinmentObject.hour = ""
+    appoinmentObject.symptoms = ""
 }
 
 
