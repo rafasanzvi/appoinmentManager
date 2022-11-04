@@ -50,6 +50,70 @@ class UI {
             divMessage.remove()
         }, 5000)
     }
+
+    printAppoinments({appoinments}) {
+
+        this.cleanHTML()
+        
+        appoinments.forEach(appoinment => {
+
+            const { pet, owner, phone, date, hour, symptoms, id } = appoinment // With the id we can edit or delete any appoinment
+
+            const divAppoinment = document.createElement("div")
+            divAppoinment.classList.add("cita", "p-3")
+            divAppoinment.dataset.id = id
+
+            // Scripting of the elements of the appoinment
+            // Pet
+            const petParagraph = document.createElement("h2")
+            petParagraph.classList.add("card-title", "font-weight-bolder", "text-capitalize")
+            petParagraph.textContent = pet
+            // Owner
+            const ownerParagraph = document.createElement("p")
+            ownerParagraph.classList.add("text-capitalize")
+            ownerParagraph.innerHTML = `
+                <span class="font-weight-bolder">Owner: </span> ${owner}
+            `
+            // Phone
+            const phoneParagraph = document.createElement("p")
+            phoneParagraph.innerHTML = `
+                <span class="font-weight-bolder">Phone: </span> ${phone}
+            `
+            // Date
+            const dateParagraph = document.createElement("p")
+            dateParagraph.innerHTML = `
+                <span class="font-weight-bolder">Date: </span> ${date}
+            `
+            // Hour
+            const hourParagraph = document.createElement("p")
+            hourParagraph.innerHTML = `
+                <span class="font-weight-bolder">Hour: </span> ${hour}
+            `
+            // Phone
+            const symptomsParagraph = document.createElement("p")
+            symptomsParagraph.innerHTML = `
+                <span class="font-weight-bolder">Symptoms: </span> ${symptoms}
+            `
+
+            // Add paragraphs to the divAppoinment
+            divAppoinment.appendChild(petParagraph)
+            divAppoinment.appendChild(ownerParagraph)
+            divAppoinment.appendChild(phoneParagraph)
+            divAppoinment.appendChild(dateParagraph)
+            divAppoinment.appendChild(hourParagraph)
+            divAppoinment.appendChild(symptomsParagraph)
+
+            // Adding the divAppoinment to the HTML
+            AppoinmentContainer.appendChild(divAppoinment)
+        })
+    }
+
+    // Clean HTML
+    cleanHTML() {
+        while(AppoinmentContainer.firstChild) {
+            AppoinmentContainer.removeChild(AppoinmentContainer.firstChild)
+        }
+    }
 }
 
 // We instantiate the classes globally for use in various functions
@@ -116,7 +180,7 @@ function createNewAppoinment(e) {
     form.reset()
 
     // Show appoinments in the HTML
-    
+    ui.printAppoinments(manageAppoinment)
 }
 
 // We need to restart the appoinmentObject because although the HTML has been restarted the object in the code is keeping saving the different appoinments
