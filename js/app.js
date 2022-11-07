@@ -6,6 +6,8 @@ const dateInput = document.querySelector("#fecha")
 const hourInput = document.querySelector("#hora")
 const symptomsInput = document.querySelector("#sintomas")
 
+let editing 
+
 // User Interface
 // Form
 const form = document.querySelector("#nueva-cita")
@@ -101,8 +103,13 @@ class UI {
             const btnDelete = document.createElement("button")
             btnDelete.classList.add("btn", "btn-danger", "mr-2")
             btnDelete.innerHTML = 'Delete <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"</path></svg>'
-
             btnDelete.onclick = () => deleteAppoinment(id)
+
+            // Button to edit an appoinment
+            const btnEdit = document.createElement("button")
+            btnEdit.classList.add("btn", "btn-info")
+            btnEdit.innerHTML = 'Edit <svg fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"> <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"</path></svg>'
+            btnEdit.onclick = () => editAppoinment(appoinment)
 
             // Add paragraphs to the divAppoinment
             divAppoinment.appendChild(petParagraph)
@@ -111,7 +118,9 @@ class UI {
             divAppoinment.appendChild(dateParagraph)
             divAppoinment.appendChild(hourParagraph)
             divAppoinment.appendChild(symptomsParagraph)
+            // Adding buttons
             divAppoinment.appendChild(btnDelete)
+            divAppoinment.appendChild(btnEdit)
 
             // Adding the divAppoinment to the HTML
             AppoinmentContainer.appendChild(divAppoinment)
@@ -177,12 +186,30 @@ function createNewAppoinment(e) {
         return
     }
 
-    // Generating a new ID
-    appoinmentObject.id = Date.now()
+    if(editing) {
+        ui.printAlert("Successfully edited")
 
-    // Creating a new appoinment
-    manageAppoinment.addNewAppoinment({...appoinmentObject}) // We can create a copy of the object to avoid to have duplicated objects when we make a new appoinment
+        //To pass the appoinment object to editing
+        //
 
+        //Restarting the create appoinment text
+        form.querySelector('button[type="submit"]').textContent = "Create appoinment"
+
+        // To avoid editing mode if we are creating a new appoinment
+        editing = false
+
+    } else {
+        // Generating a new ID
+        appoinmentObject.id = Date.now()
+
+        // Creating a new appoinment
+        manageAppoinment.addNewAppoinment({ ...appoinmentObject }) // We can create a copy of the object to avoid to have duplicated objects when we make a new appoinment
+
+        //Message of appoinment added correctly
+        ui.printAlert("The appoinment was created correctly")
+    }
+
+    
     // Restart the appoinmentObject
     restartAppoinmentObject()
 
@@ -210,6 +237,33 @@ function deleteAppoinment(idAppoinment) {
         ui.printAlert("The appoinment was removed correctly")
     // Restart the appoinments
         ui.printAppoinments(manageAppoinment)
+}
+
+// It takes the appoinment datas and the edition mode
+function editAppoinment(appoinment) {
+    const { pet, owner, phone, date, hour, symptoms, id } = appoinment
+
+    // Fill the inputs with the datas taken from the appoinment object
+    petInput.value = pet
+    ownerInput.value = owner
+    phoneInput.value = phone
+    dateInput.value = date
+    hourInput.value = hour
+    symptomsInput.value = symptoms
+
+    // Fill the appoinment object, with this we have filled the values and the appoinment Object
+    appoinmentObject.pet = pet
+    appoinmentObject.owner = owner
+    appoinmentObject.phone = phone
+    appoinmentObject.date = date
+    appoinmentObject.hour = hour
+    appoinmentObject.symptoms = symptoms
+    appoinmentObject.id = id
+
+    // To change the text button
+    form.querySelector('button[type="submit"]').textContent = "Save changes"
+
+    editing = true
 }
 
 
