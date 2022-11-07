@@ -20,8 +20,10 @@ class Appoinment {
 
     addNewAppoinment(appoinment) {
         this.appoinments = [...this.appoinments, appoinment]
+    }
 
-        console.log("I am the appoinments: ", this.appoinments)
+    deleteAppoinment(idAppoinment) {
+        this.appoinments = this.appoinments.filter(appoinment => appoinment.id !== idAppoinment)
     }
 }
 
@@ -95,6 +97,13 @@ class UI {
                 <span class="font-weight-bolder">Symptoms: </span> ${symptoms}
             `
 
+            // Button to delete the appoinment
+            const btnDelete = document.createElement("button")
+            btnDelete.classList.add("btn", "btn-danger", "mr-2")
+            btnDelete.innerHTML = 'Delete <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"</path></svg>'
+
+            btnDelete.onclick = () => deleteAppoinment(id)
+
             // Add paragraphs to the divAppoinment
             divAppoinment.appendChild(petParagraph)
             divAppoinment.appendChild(ownerParagraph)
@@ -102,6 +111,7 @@ class UI {
             divAppoinment.appendChild(dateParagraph)
             divAppoinment.appendChild(hourParagraph)
             divAppoinment.appendChild(symptomsParagraph)
+            divAppoinment.appendChild(btnDelete)
 
             // Adding the divAppoinment to the HTML
             AppoinmentContainer.appendChild(divAppoinment)
@@ -191,6 +201,15 @@ function restartAppoinmentObject() {
     appoinmentObject.date = ""
     appoinmentObject.hour = ""
     appoinmentObject.symptoms = ""
+}
+
+function deleteAppoinment(idAppoinment) {
+    // Delete appoinment
+        manageAppoinment.deleteAppoinment(idAppoinment)
+    // Show a message
+        ui.printAlert("The appoinment was removed correctly")
+    // Restart the appoinments
+        ui.printAppoinments(manageAppoinment)
 }
 
 
