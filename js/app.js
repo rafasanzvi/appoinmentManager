@@ -27,6 +27,10 @@ class Appoinment {
     deleteAppoinment(idAppoinment) {
         this.appoinments = this.appoinments.filter(appoinment => appoinment.id !== idAppoinment)
     }
+
+    editAppoinment(appoinmentUpdated) {
+        this.appoinments = this.appoinments.map(appoinment => appoinment.id === appoinmentUpdated.id ? appoinmentUpdated : appoinment)
+    }
 }
 
 class UI {
@@ -190,9 +194,9 @@ function createNewAppoinment(e) {
         ui.printAlert("Successfully edited")
 
         //To pass the appoinment object to editing
-        //
+        manageAppoinment.editAppoinment({...appoinmentObject})
 
-        //Restarting the create appoinment text
+        //Restarting the create appoinment text to his initial state
         form.querySelector('button[type="submit"]').textContent = "Create appoinment"
 
         // To avoid editing mode if we are creating a new appoinment
